@@ -3,11 +3,11 @@
 [![Pyhthon Version](https://img.shields.io/badge/python-3.11-blue)](https://www.python.org/downloads/release/python-370/)
 [![GPLv3 License](https://img.shields.io/github/license/hcy2206/FIRMS_Data_Visualization)](https://opensource.org/licenses/GPL-3.0)
 
-本项目是[MaaAssistantArknights](https://maa.plus)的一款辅助脚本，用于解决用户在电脑上通过定时运行 MAA 的方式进行自动化刷图时，无法及时得知本次运行的结果的问题。
+本项目是 [MaaAssistantArknights](https://maa.plus) 的一款辅助脚本，用于解决用户在电脑上通过定时运行 MAA 的方式进行自动化刷图时，无法及时得知本次运行的结果的问题。
 
-基于 [PushDeer](http://pushdeer.com) 提供的 API，实现了一个简单的通知脚本，通过对于 MAA 运行日志的分析，实现了当 MAA 一次运行结束之后，通过 Pushdeer 的方式 向用户推送此次运行的结果，包括是否出错、一些错误日志以及本次运行所掉落的物品。
+基于 [Server酱](https://sct.ftqq.com/sendkey) 提供的 API，实现了一个简单的通知脚本，通过对于 MAA 运行日志的分析，实现了当 MAA 一次运行结束之后，通过 Pushdeer 的方式 向用户推送此次运行的结果，包括是否出错、一些错误日志以及本次运行所掉落的物品。
 
-下图是一些通知的样例：
+下图是一些该项目原项目的通知的样例：
 
 ![IMG_5382](https://markdown-tuchuang-hcy2206.oss-cn-shanghai.aliyuncs.com/img/202307011605689.jpg)
 
