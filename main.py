@@ -73,7 +73,7 @@ def serverchan_send(text, desp):
     'desp': desp
   }).encode('utf-8')
 
-  req = urllib.request.Request('https://sctapi.ftqq.com/%s.send' % SERVERCHAN_KEY, data=post_data)
+  req = urllib.request.Request('https://sctapi.ftqq.com/%s.send' % SERVERCHAN_KEY, data=post_data, method='POST')
   urllib.request.urlopen(req)
 
 def notify(text, desc):
@@ -82,19 +82,23 @@ def notify(text, desc):
 
 if __name__ == '__main__':
     log, line_report = search_keyword()
-    # print(line_report)
+    # 使用正则表达式移除 <任意内容><> 部分
+    new_report = [re.sub(r'<.*><>', '', line).strip() for line in line_report]
+
+    # 把新的列表元素连接成一个字符串
+    line_report = '\n\n'.join(new_report)
     if KEYWORD_ERROR in log:
-        text = '## ⚠️MAA 已经完成了任务, 但有些任务失败了!'
-        desc = "### *以下是错误报告*:\n\n" + log + '\n\n' + \
-               "### *以下是掉落报告*:\n\n" + line_report_format(line_report)
-        # notify('## ⚠️MAA 已经完成了任务, 但有些任务失败了!', "### *这些是错误报告*:\n\n" + log)
+        text = '## ⚠️MAA has finished your job, but something failed!'
+        desc = "### *Here's the ERROR log*:\n\n" + log + '\n\n' + \
+               "### *Here's the drop report*:\n\n" + line_report
+        # notify('## ⚠️MAA has finished your job, but something failed!', "### *Here's the ERROR log*:\n\n" + log)
     elif KEYWORD_WARNING in log:
-        text = '## ⚠️MAA 已经完成了任务, but there\'s warning!'
-        desc = "### *以下是警告信息*:\n\n" + log + '\n\n' + \
-               "### *以下是掉落报告*:\n\n" + line_report_format(line_report)
-        # notify('## ⚠️MAA 已经完成了任务, but there\'s warning!', "### *Here's the WARNING log*:\n\n" + log)
+        text = '## ⚠️MAA has finished your job, but there\'s warning!'
+        desc = "### *Here's the WARNING log*:\n\n" + log + '\n\n' + \
+               "### *Here's the drop report*:\n\n" + line_report
+        # notify('## ⚠️MAA has finished your job, but there\'s warning!', "### *Here's the WARNING log*:\n\n" + log)
     else:
-        text = '## 🎉MAA 已经完成了任务, and everything is perfect!'
-        desc = "### *以下是掉落报告*:\n\n" + line_report_format(line_report)
-        # notify('## 🎉MAA 已经完成了任务, and everything is perfect!', '*' + log + '*')
+        text = '## 🎉MAA has finished your job, and everything is perfect!'
+        desc = "### *Here's the drop report*:\n\n" + line_report
+        # notify('## 🎉MAA has finished your job, and everything is perfect!', '*' + log + '*')
     notify(text, desc)
