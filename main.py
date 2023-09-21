@@ -1,4 +1,5 @@
-from pypushdeer import PushDeer
+import urllib.parse
+import urllib.request
 import re
 
 LOG_PATH = '..\debug\gui.log' # 日志文件路径
@@ -8,8 +9,7 @@ KEYWORD_WARNING = '代理指挥失误'
 KEYWORD_REPORT = ['开始任务: Fight', '完成任务: Fight', '掉落统计:']
 KEYWORD_REPORT_BREAK = ['已开始行动', '代理指挥失误']
 
-PUSHDEER_SERVER = 'http://yourserver.address'  # PushDeer 服务器地址
-PUSHDEER_KEY = 'Your pushdeer KEY'  # PushDeer API Key
+SERVERCHAN_KEY = 'SCT85856TF6m9Fsztkqcyew8yXHWg3XUP' # Server酱的SCKEY
 
 
 def search_keyword():
@@ -67,30 +67,34 @@ def line_report_format(line_report):
         line_report_output += line_report_array[i][0] + '    ' + line_report_array[i][1] + '\n\n'
     return line_report_output
 
+def serverchan_send(text, desp):
+  post_data = urllib.parse.urlencode({
+    'text': text,
+    'desp': desp
+  }).encode('utf-8')
+
+  req = urllib.request.Request('https://sctapi.ftqq.com/%s.send' % SERVERCHAN_KEY, data=post_data)
+  urllib.request.urlopen(req)
 
 def notify(text, desc):
-    if PUSHDEER_SERVER != '':
-        pushdeer = PushDeer(PUSHDEER_SERVER, PUSHDEER_KEY)
-    else:
-        pushdeer = PushDeer(PUSHDEER_KEY)
-    pushdeer.send_markdown(text, desc)
+  serverchan_send(text, desc)
 
 
 if __name__ == '__main__':
     log, line_report = search_keyword()
     # print(line_report)
     if KEYWORD_ERROR in log:
-        text = '## ⚠️MAA has finished your job, but something failed!'
-        desc = "### *Here's the ERROR log*:\n\n" + log + '\n\n' + \
-               "### *Here's the drop report*:\n\n" + line_report_format(line_report)
-        # notify('## ⚠️MAA has finished your job, but something failed!', "### *Here's the ERROR log*:\n\n" + log)
+        text = '## ⚠️MAA 已经完成了任务, 但有些任务失败了!'
+        desc = "### *以下是错误报告*:\n\n" + log + '\n\n' + \
+               "### *以下是掉落报告*:\n\n" + line_report_format(line_report)
+        # notify('## ⚠️MAA 已经完成了任务, 但有些任务失败了!', "### *这些是错误报告*:\n\n" + log)
     elif KEYWORD_WARNING in log:
-        text = '## ⚠️MAA has finished your job, but there\'s warning!'
-        desc = "### *Here's the WARNING log*:\n\n" + log + '\n\n' + \
-               "### *Here's the drop report*:\n\n" + line_report_format(line_report)
-        # notify('## ⚠️MAA has finished your job, but there\'s warning!', "### *Here's the WARNING log*:\n\n" + log)
+        text = '## ⚠️MAA 已经完成了任务, but there\'s warning!'
+        desc = "### *以下是警告信息*:\n\n" + log + '\n\n' + \
+               "### *以下是掉落报告*:\n\n" + line_report_format(line_report)
+        # notify('## ⚠️MAA 已经完成了任务, but there\'s warning!', "### *Here's the WARNING log*:\n\n" + log)
     else:
-        text = '## 🎉MAA has finished your job, and everything is perfect!'
-        desc = "### *Here's the drop report*:\n\n" + line_report_format(line_report)
-        # notify('## 🎉MAA has finished your job, and everything is perfect!', '*' + log + '*')
+        text = '## 🎉MAA 已经完成了任务, and everything is perfect!'
+        desc = "### *以下是掉落报告*:\n\n" + line_report_format(line_report)
+        # notify('## 🎉MAA 已经完成了任务, and everything is perfect!', '*' + log + '*')
     notify(text, desc)
